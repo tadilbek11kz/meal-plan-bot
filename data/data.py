@@ -32,6 +32,8 @@ async def get(login, password, type):
     account["name"] = res_json["name"]
     account["username"] = res_json["username"]
     account["balance"] = f'{res_json["amount"]} {currency}'
+    if not res_json["history"]:
+        return account, False
     df = pd.DataFrame(res_json["history"])
     if not os.path.exists("img"):
         os.makedirs("img")

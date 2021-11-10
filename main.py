@@ -115,7 +115,7 @@ async def get_data_callback(call: types.CallbackQuery, callback_data: dict):
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=account["message"])
         else:
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=f'Name: {account.get("username")}\nAccount name: {account.get("name")}\nBalance: {account.get("balance")}')
-            if user["image"]:
+            if user["image"] and account.get("image"):
                 await bot.send_photo(chat_id=call.from_user.id, photo=open(f'{account["image"]}', "rb"))
     else:
         # if user's data do not exist, ask to enter login and password
