@@ -4,10 +4,9 @@ import asyncio
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.default import menu
-from keyboards.inline import subscription_menu, greet_menu, money_menu
-from callbacks import subscription_callback, get_data_callback
+from keyboards.inline import subscription_menu, greet_menu, money_menu, settings_menu
+from callbacks import subscription_callback, get_data_callback, image_callback
 
 from data import data
 from database import DataBase
@@ -58,22 +57,17 @@ async def get_data(message: types.Message):
 @dp.message_handler(Text(equals="Settings"))
 async def get_data(message: types.Message):
     user = db.get_user_data(message.from_user.id)
-    inline_settings_menu = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=f'Rows: {user["rows"]}', url="https://tadilbek11kz.github.io"),
-                InlineKeyboardButton(
-                    text=f'Image: {user["image"]}', url="https://tadilbek11kz.github.io")
-            ],
-            [
-                InlineKeyboardButton(
-                    text=f'Login: {user["login"]}', url="https://tadilbek11kz.github.io"),
-            ]
-        ],
-        resize_keyboard=True
-    )
-    await message.answer("Settings", reply_markup=inline_settings_menu)
+    
+    await message.answer("Settings", reply_markup=settings_menu(user))
+
+
+@dp.callback_query_handler(image_callback.filter())
+async def image_settings_callback(call: types.CallbackQuery, callback_data: dict):
+    await call.answer(cache_time=30)
+    value = callback_data.get("value") == "True"
+    db.update_user_settings(call.from_user.id, "image", not value)
+    user = db.get_user_data(call.from_user.id)
+    await call.message.edit_reply_markup(reply_markup=settings_menu(user))
 
 
 @dp.callback_query_handler(subscription_callback.filter(command="subscribe"))
@@ -121,7 +115,8 @@ async def get_data_callback(call: types.CallbackQuery, callback_data: dict):
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=account["message"])
         else:
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=f'Name: {account.get("username")}\nAccount name: {account.get("name")}\nBalance: {account.get("balance")}')
-            await bot.send_photo(chat_id=call.from_user.id, photo=open(f'{account["image"]}', "rb"))
+            if user["image"]:
+                await bot.send_photo(chat_id=call.from_user.id, photo=open(f'{account["image"]}', "rb"))
     else:
         # if user's data do not exist, ask to enter login and password
         await call.answer("We don't have your login and password, please use '/register login password' command")

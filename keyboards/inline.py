@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from callbacks import subscription_callback, get_data_callback
+from callbacks import subscription_callback, get_data_callback, image_callback
 
 
 money_menu = InlineKeyboardMarkup(
@@ -50,3 +50,21 @@ greet_menu = InlineKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+
+def settings_menu(user):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=f'Rows: {user["rows"]}', url="https://tadilbek11kz.github.io"),
+                InlineKeyboardButton(
+                    text=f'Image: {user["image"]}', callback_data=image_callback.new(user["image"]))
+            ],
+            [
+                InlineKeyboardButton(
+                    text=f'Login: {user["login"]}', url="https://tadilbek11kz.github.io"),
+            ]
+        ],
+        resize_keyboard=True
+    )
