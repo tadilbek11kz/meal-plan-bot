@@ -60,6 +60,14 @@ class DataBase:
                 return {"login": user["login"], "password": user["password"], "rows": user["rows"], "image": user["image"]}
             return None
 
+
+    def update_user_settings(self, user_id, key, value):
+        query = {"user_id": user_id}
+        data = {key: value}
+        with self.connection:
+            return self.collection.update_one(query, {"$set": data})
+
+
     def close(self):
         # Close connection with db
         self.connection.close()
