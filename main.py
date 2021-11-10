@@ -119,8 +119,9 @@ async def get_data_callback(call: types.CallbackQuery, callback_data: dict):
         account, error = await data.get(login, password, type)
         if error:
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=account["message"])
-        await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=f'Name: {account.get("username")}\nAccount name: {account.get("name")}\nBalance: {account.get("balance")}')
-        await bot.send_photo(chat_id=call.from_user.id, photo=open(f'{account["image"]}', "rb"))
+        else:
+            await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=f'Name: {account.get("username")}\nAccount name: {account.get("name")}\nBalance: {account.get("balance")}')
+            await bot.send_photo(chat_id=call.from_user.id, photo=open(f'{account["image"]}', "rb"))
     else:
         # if user's data do not exist, ask to enter login and password
         await call.answer("We don't have your login and password, please use '/register login password' command")
