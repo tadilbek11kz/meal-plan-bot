@@ -28,6 +28,8 @@ async def get(login, password, type):
     currency = "AED"
     if int(type) == 48:
         currency = "Swipes"
+    elif int(type) == 8:
+        currency = ""
 
     account["name"] = res_json["name"]
     account["username"] = res_json["username"]
