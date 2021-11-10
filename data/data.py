@@ -7,7 +7,7 @@ import uuid
 
 
 async def get(login, password, type):
-    url = "http://127.0.0.1:5000/finances"
+    url = "https://mynyuad.herokuapp.com/finances"
 
     payload = json.dumps({
         "login": login,
