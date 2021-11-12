@@ -23,7 +23,7 @@ async def get(login, password, type):
     if response.status_code != 200:
         print(response.content)
         return {"message": "Error hapened during data processing."}, True
-    res_json = response.json()[0]
+    res_json = response.json()
     account = {}
     currency = "AED"
     if int(type) == 48:
