@@ -5,7 +5,9 @@
 - [ ] Accelerate recieving the data by saving session key
 - [ ] Create video instruction for registration
 - [ ] Create loading bar for procedure
-- [ ] Check for async of the bot
+- [x] Check for async of the bot
+- [ ] Add all commands to command list
+- [ ] Create login and password validation through request
 ### Bugs
-- [ ] If table is empty it will cause an error
+- [x] If table is empty it will cause an error
 - [ ] Error handlers
