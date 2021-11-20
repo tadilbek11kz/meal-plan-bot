@@ -57,16 +57,14 @@ class DataBase:
         with self.connection:
             user = self.collection.find_one({"user_id": user_id})
             if "login" in user and "password" in user:
-                return {"login": user["login"], "password": user["password"], "rows": user["rows"], "image": user["image"]}
+                return {"login": user["login"], "password": user["password"], "albert_login": user["albert_login"], "albert_password": user["albert_password"], "rows": user["rows"], "image": user["image"]}
             return None
-
 
     def update_user_settings(self, user_id, key, value):
         query = {"user_id": user_id}
         data = {key: value}
         with self.connection:
             return self.collection.update_one(query, {"$set": data})
-
 
     def close(self):
         # Close connection with db
