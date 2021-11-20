@@ -57,8 +57,25 @@ async def get_data(message: types.Message):
 @dp.message_handler(Text(equals="Settings"))
 async def get_data(message: types.Message):
     user = db.get_user_data(message.from_user.id)
-    
+
     await message.answer("Settings", reply_markup=settings_menu(user))
+
+
+@dp.message_handler(Text(equals="Get waitlist"))
+async def get_data(message: types.Message):
+    user = db.get_user_data(message.from_user.id)
+    if user:
+        # if user's data exist, send information
+        login = user["albert_login"]
+        password = user["albert_password"]
+        waitlist, error = await data.get_waitlist(login, password)
+        if error:
+            await message.answer(text=waitlist["message"])
+        else:
+            await message.answer("\n".join([f'{key}: {course[key]}' for course in waitlist for key in course]))
+    else:
+        # if user's data do not exist, ask to enter login and password
+        await message.answer("We don't have your login and password, please use '/register login password' command")
 
 
 @dp.callback_query_handler(image_callback.filter())
@@ -110,7 +127,7 @@ async def get_data_callback(call: types.CallbackQuery, callback_data: dict):
         login = user["login"]
         password = user["password"]
         await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text="We are proceeding your request! Please wait!")
-        account, error = await data.get(login, password, type)
+        account, error = await data.get_finance(login, password, type)
         if error:
             await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=account["message"])
         else:

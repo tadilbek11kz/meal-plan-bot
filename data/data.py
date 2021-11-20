@@ -6,7 +6,7 @@ import dataframe_image as dfi
 import uuid
 
 
-async def get(login, password, type):
+async def get_finance(login, password, type):
     url = "https://mynyuad.herokuapp.com/finances"
 
     payload = json.dumps({
@@ -44,3 +44,24 @@ async def get(login, password, type):
     account["image"] = unique_filename
 
     return account, False
+
+
+async def get_waitlist(login, password):
+    url = "https://mynyuad.herokuapp.com/waitlist"
+
+    payload = json.dumps({
+        "login": login,
+        "password": password,
+    })
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    if response.status_code != 200:
+        print(response.json())
+        return {"message": response.json().get("message")}, True
+    res_json = response.json()
+
+    return res_json, False

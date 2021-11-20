@@ -7,6 +7,9 @@ menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Get data"),
         ],
         [
+            KeyboardButton(text="Get waitlist"),
+        ],
+        [
             KeyboardButton(text="Subscription"),
             KeyboardButton(text="Settings")
         ]
